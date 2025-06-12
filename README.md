@@ -1,58 +1,193 @@
-# Svelte library
+# Exam Question Paper Generator
 
-Everything you need to build a Svelte library, powered by [`sv`](https://npmjs.com/package/sv).
+A SvelteKit application for creating and managing exam question papers with an intuitive user interface.
 
-Read more about creating a library [in the docs](https://svelte.dev/docs/kit/packaging).
+## 🚀 Tech Stack
 
-## Creating a project
+- **Framework:** SvelteKit
+- **Styling:** TailwindCSS
+- **Charts:** Chart.js
+- **Font:** Inter (Google Fonts)
 
-If you're seeing this, you've probably already done this step. Congrats!
+## 📚 Libraries & Dependencies
 
-```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+```json
+{
+  "dependencies": {
+    "@sveltejs/kit": "^2.0.0",
+    "chart.js": "^4.0.0",
+    "svelte": "^4.0.0",
+    "tailwindcss": "^3.0.0"
+  }
+}
 ```
 
-## Developing
+## 🎨 Design Standards
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### Typography
+- Primary Font: Inter
+- Font Weights: 400 (regular), 500 (medium), 600 (semibold), 700 (bold)
+- Base Font Size: 16px (1rem)
 
-```bash
-npm run dev
+### Color Palette
+```css
+/* Primary Colors */
+--primary-blue: #2563eb;     /* bg-blue-600 */
+--primary-green: #22c55e;    /* bg-green-500 */
+--primary-red: #ef4444;      /* bg-red-500 */
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+/* Text Colors */
+--text-primary: #374151;     /* text-gray-700 */
+--text-secondary: #6B7280;   /* text-gray-500 */
+
+/* Background Colors */
+--bg-white: #ffffff;         /* bg-white */
+--bg-gray-light: #F9FAFB;    /* bg-gray-50 */
 ```
 
-Everything inside `src/lib` is part of your library, everything inside `src/routes` can be used as a showcase or preview app.
+### Component Standards
 
-## Building
+#### Cards
+- Rounded corners (lg)
+- White background
+- Light shadow
+- 1.5rem padding (p-6)
+- Bottom margin (mb-6)
 
-To build your library:
+#### Form Elements
+- Input height: 2.5rem (h-10)
+- Border radius: 0.375rem (rounded-md)
+- Focus states with blue ring
+- Required fields marked with red asterisk
 
-```bash
-npm run package
+#### Buttons
+- Primary: Blue background with hover state
+- Secondary: Gray border with hover state
+- Danger: Red text/border with hover state
+- Border radius: 0.375rem (rounded-md)
+
+## 🏗️ Project Structure
+
+```
+src/
+├── lib/
+│   ├── components/
+│   │   ├── ActionButtons.svelte
+│   │   ├── Card.svelte
+│   │   ├── ChapterSelector.svelte
+│   │   ├── DifficultyDistribution.svelte
+│   │   ├── Dropdown.svelte
+│   │   ├── ExamConfig.svelte
+│   │   ├── Input.svelte
+│   │   ├── QuestionsList.svelte
+│   │   ├── RadioGroup.svelte
+│   │   ├── SummarySection.svelte
+│   │   └── TabButton.svelte
+│   └── stores/
+│       └── questionStore.js
+├── routes/
+│   ├── +layout.svelte
+│   └── +page.svelte
+└── app.html
 ```
 
-To create a production version of your showcase app:
+## 🔧 Component Architecture
 
-```bash
-npm run build
+### Reusable Components
+1. **Base Components**
+   - Input
+   - Dropdown
+   - RadioGroup
+   - Card
+   - TabButton
+   - ActionButton
+
+2. **Complex Components**
+   - DifficultyDistribution (with Chart.js integration)
+   - ChapterSelector
+   - QuestionsList
+   - SummarySection
+
+### State Management
+- Uses Svelte stores for global state
+- Reactive updates for selected groups and questions
+- Proper data flow between parent and child components
+
+## 📝 Coding Standards
+
+1. **Component Organization**
+   - Single responsibility principle
+   - Props documentation
+   - Clear component interfaces
+
+2. **Event Handling**
+   - Custom event dispatching
+   - Proper event bubbling
+   - Type-safe event handlers
+
+3. **Reactivity**
+   - Proper use of reactive statements
+   - Store subscriptions cleanup
+   - Reactive declarations when needed
+
+4. **Styling**
+   - TailwindCSS utility classes
+   - Consistent spacing
+   - Responsive design patterns
+
+## 🔄 Data Flow
+
+```mermaid
+graph TD
+    A[Page Component] --> B[ChapterSelector]
+    A --> C[DifficultyDistribution]
+    A --> D[ExamConfig]
+    B --> E[SummarySection]
+    E --> F[QuestionsList]
+    E --> G[SummaryTable]
 ```
 
-You can preview the production build with `npm run preview`.
+## 🚀 Future Enhancements
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+1. **API Integration**
+   ```javascript
+   GET /api/questions
+   POST /api/groups
+   PUT /api/groups/:id
+   DELETE /api/groups/:id
+   ```
 
-## Publishing
+2. **Features**
+   - Advanced filtering
+   - Question preview
+   - Multiple paper versions
+   - PDF export
 
-Go into the `package.json` and give your package the desired name through the `"name"` option. Also consider adding a `"license"` field and point it to a `LICENSE` file which you can create from a template (one popular option is the [MIT license](https://opensource.org/license/mit/)).
+## 📋 Setup Instructions
 
-To publish your library to [npm](https://www.npmjs.com):
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start development server:
+   ```bash
+   npm run dev
+   ```
+4. Build for production:
+   ```bash
+   npm run build
+   ```
 
-```bash
-npm publish
-```
+## 🤝 Contributing
+
+Follow these steps for contributions:
+1. Fork the repository
+2. Create a feature branch
+3. Commit changes
+4. Push to the branch
+5. Open a pull request
+
+## 📄 License
+
+MIT License
