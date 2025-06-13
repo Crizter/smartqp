@@ -1,7 +1,12 @@
 <script>
+  import { goto } from '$app/navigation';
+  
   export let onReset = () => {};
   export let onDelete = () => {};
-  export let onCreatePaper = () => {};
+
+  function handleCreatePaper() {
+    goto('/review');
+  }
 </script>
 
 <div class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4">
@@ -23,7 +28,7 @@
     
     <button
       class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-      on:click={onCreatePaper}
+      on:click={handleCreatePaper}
     >
       Create question paper
     </button>
