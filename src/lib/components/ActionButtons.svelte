@@ -1,32 +1,25 @@
 <script>
-  import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
   
   export let onReset = () => {};
   export let onDelete = () => {};
-  
+  export let onCreatePaper = () => {};
   
   let visible = false;
 
-
   onMount(() => {
     const handleScroll = () => {
-      visible = window.scrollY > 400; // Show after scrolling 200px
+      visible = window.scrollY > 400;
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   });
 
-  async function handleNavigation() { 
-    try {
-        await goto('/review') ; 
-    } catch (error) {
-      console.error('Navigation failed',error);
-      
-    }
+  function handleCreatePaper(event) {
+    event.preventDefault();
+    onCreatePaper(event);
   }
-
 </script>
 
 <div 
@@ -53,7 +46,7 @@
       <button
         type="button"
         class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
-        on:click={handleNavigation}
+        on:click={handleCreatePaper}
       >
         Create Question Paper
       </button>

@@ -48,7 +48,7 @@
     </div>
 
     <!-- Participants -->
-    <div class="bg-white rounded-lg p-6">
+    <!-- <div class="bg-white rounded-lg p-6">
       <h3 class="text-lg font-semibold mb-4">Participants</h3>
       <div class="space-y-3">
         <div class="grid grid-cols-2 gap-2">
@@ -60,7 +60,7 @@
           <span class="font-medium text-right">{participants.students}</span>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Selected Subjects -->
     <div class="bg-white rounded-lg p-6">

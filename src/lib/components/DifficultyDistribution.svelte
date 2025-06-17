@@ -119,5 +119,8 @@
     {isValid ? 'Valid distribution' : 'Distribution must equal 100%'}
   </div>
 
-  <canvas bind:this={chartCanvas} class="max-h-12"></canvas>
+  <div>
+    <p class = "font-medium font-sans text-gray-700 ">Distribution preview </p>
+    <canvas bind:this={chartCanvas} class="max-h-12"></canvas>
+  </div>
 </div>

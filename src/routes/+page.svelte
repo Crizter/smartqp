@@ -9,6 +9,11 @@
   import ActionButtons from '$lib/components/ActionButtons.svelte';
   import SummaryTable from '$lib/components/SummaryTable.svelte';
   import GroupTable from '$lib/components/GroupTable.svelte';
+  import ConfigurationSummary from '$lib/components/ConfigurationSummary.svelte';
+  import QuestionDifficultyDistribution from '$lib/components/QuestionDifficultyDistribution.svelte';
+  import QuestionGroupsPreview from '$lib/components/QuestionGroupsPreview.svelte';
+  import ActionBar from '$lib/components/ActionBar.svelte';
+  import QuestionsList from '$lib/components/QuestionsList.svelte';
   
   import { selectedGroups, selectedQuestions } from '$lib/stores/questionStore';
 
@@ -25,11 +30,14 @@
 
   let groups = [];
   let groupCounter = 1;
+  let allQuestions = []; // Store all available questions
 
   const examModes = ['Online', 'Offline', 'Hybrid'];
   const classOptions = Array.from({length: 12}, (_, i) => (i + 1).toString());
   const mediumOptions = ['Hindi', 'English', 'Tamil'];
   const subjectOptions = ['Science', 'Maths', 'Physics'];
+
+  let currentView = 'config'; // 'config' | 'review'
 
   function handleReset() {
 
@@ -46,9 +54,9 @@
     groupCounter = 1;
   }
 
-  function handleCreatePaper() {
-    // Implement question paper creation logic
-    console.log('Creating question paper...');
+  function handleCreatePaper(event) {
+    event.preventDefault();
+    currentView = 'review';
   }
   function handleSubmit(event){
     event.preventdefault() ; 
@@ -62,27 +70,59 @@
     console.log('New group added:', groups); // Debug log
   }
   function handleGroupCreate(event) {
-    const { items, type, totalQuestions } = event.detail;
+    const { type, items, totalQuestions } = event.detail;
     
     const newGroup = {
       id: groupCounter,
       description: `Group ${groupCounter}`,
       type: type,
-      items: items.map(item => ({...item})), // Create copy of items
+      items: items.map(item => ({...item})),
       availableQuestions: totalQuestions,
       questionsToInsert: 10
     };
     
+    // Populate questions for the selected items
+    allQuestions = items.map((item, index) => ({
+      id: index + 1,
+      text: `Sample question ${index + 1} from ${item.name}`,
+      type: "MCQ",
+      marks: 2,
+      difficulty: "Medium",
+      chapter: item.name,
+      isBlacklisted: false
+    }));
+    
     groups = [...groups, newGroup];
     groupCounter++;
+  }
+
+  function handleBack(event) {
+    event.preventDefault();
+    currentView = 'config';
+  }
+
+  function handleGenerate() {
+    console.log('Generating papers with config:', {
+      examTitle,
+      examMode,
+      examClass,
+      examMedium,
+      examSubject,
+      totalTime,
+      totalQuestions,
+      numberOfSets,
+      numberOfVersions,
+      groups
+    });
   }
 </script>
 
 <div class="max-w-3xl mx-auto px-4 py-8">
-  <h1 class="text-2xl font-bold font-inter mb-8">Create exam event</h1>
+  {#if currentView === 'config'}
+    <h1 class="text-2xl font-bold font-inter mb-8">Create exam event</h1>
 
-  <form on:submit|preventDefault={handleSubmit}>
-    <Card title="Exam details">
+    <form on:submit|preventDefault={handleSubmit}>
+      <Card title="Exam details">
 
    <div>
     <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -172,7 +212,7 @@
     <ChapterSelector on:createGroup={handleGroupCreate} />
   </form>
 
-  {#if groups.length > 0}
+  <!-- {#if groups.length > 0}
     <div class="mt-8">
       <GroupTable
         {groups}
@@ -185,7 +225,28 @@
         }}
       />
     </div>
-  {/if}
+
+    <QuestionsList 
+      {groups}
+      questions={allQuestions}
+      on:updateGroups={(e) => groups = e.detail}
+      on:updateQuestions={(e) => allQuestions = e.detail}
+    />
+  {/if} -->
+  
+{#if groups.length > 0}
+  <QuestionsList 
+    {groups}
+    questions={allQuestions}
+    on:updateGroups={(e) => {
+      groups = e.detail;
+    }}
+    on:updateQuestions={(e) => {
+      allQuestions = e.detail;
+    }}
+  />
+{/if}
+
 
   <div class="mt-8 mb-8">
     <ActionButtons 
@@ -195,4 +256,39 @@
       onCreatePaper={handleCreatePaper}
     />
   </div>
+  {:else}
+    <!-- Review View -->
+    <div class="space-y-8">
+      <Card title="Review Configuration">
+        <ConfigurationSummary 
+          examTitle={examTitle}
+          examMode={examMode}
+          examClass={examClass}
+          examMedium={examMedium}
+          examSubject={examSubject}
+          {totalTime}
+          {totalQuestions}
+          {numberOfSets}
+          {numberOfVersions}
+        />
+      </Card>
+
+      <Card title="Question Distribution">
+        <QuestionDifficultyDistribution {groups} />
+      </Card>
+
+      <Card title="Question Groups">
+        <QuestionGroupsPreview {groups} />
+      </Card>
+
+      <ActionBar
+        {totalTime}
+        {numberOfSets}
+        {numberOfVersions}
+        onCancel={handleBack}
+        onReset={handleReset}
+        onGenerate={handleGenerate}
+      />
+    </div>
+  {/if}
 </div>
