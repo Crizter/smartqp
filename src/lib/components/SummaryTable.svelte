@@ -21,6 +21,10 @@
       selectedRows = selectedRows.filter(i => i !== index);
     }
   }
+
+  $: {
+    console.log('Groups in table:', groups); // Debug log
+  }
 </script>
 
 <div class="overflow-x-auto">

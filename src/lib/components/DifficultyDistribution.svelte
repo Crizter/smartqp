@@ -19,23 +19,57 @@
     chart = new Chart(chartCanvas, {
       type: 'bar',
       data: {
-        labels: ['Easy', 'Medium', 'Hard'],
-        datasets: [{
-          data: [easyPercentage, mediumPercentage, hardPercentage],
-          backgroundColor: ['#22c55e', '#fbbf24', '#ef4444']
-        }]
+        labels: ['Distribution'],
+        datasets: [
+          {
+            label: 'Easy',
+            data: [easyPercentage],
+            backgroundColor: '#22c55e',
+            barPercentage: 0.8
+          },
+          {
+            label: 'Medium',
+            data: [mediumPercentage],
+            backgroundColor: '#fbbf24',
+            barPercentage: 0.8
+          },
+          {
+            label: 'Hard',
+            data: [hardPercentage],
+            backgroundColor: '#ef4444',
+            barPercentage: 0.8
+          }
+        ]
       },
       options: {
-        plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true, max: 100 } }
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: {
+            stacked: true,
+            display: false,
+            max: 100
+          },
+          y: {
+            stacked: true,
+            display: false
+          }
+        }
       }
     });
 
     return () => chart.destroy();
   });
 
+  // Update reactive statement for stacked bar
   $: if (chart) {
-    chart.data.datasets[0].data = [easyPercentage, mediumPercentage, hardPercentage];
+    chart.data.datasets[0].data = [easyPercentage];
+    chart.data.datasets[1].data = [mediumPercentage];
+    chart.data.datasets[2].data = [hardPercentage];
     chart.update();
   }
 </script>
@@ -85,5 +119,5 @@
     {isValid ? 'Valid distribution' : 'Distribution must equal 100%'}
   </div>
 
-  <canvas bind:this={chartCanvas} class="max-h-48"></canvas>
+  <canvas bind:this={chartCanvas} class="max-h-12"></canvas>
 </div>

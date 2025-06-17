@@ -22,7 +22,7 @@ const questionGroups = [
       easy: 6,
       medium: 5,
       hard: 4
-    },
+        },
     {
       subject: 'Mathematics',
       group: 'Geometry',

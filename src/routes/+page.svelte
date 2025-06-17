@@ -7,6 +7,9 @@
   import ExamConfig from '$lib/components/ExamConfig.svelte';
   import ChapterSelector from '$lib/components/ChapterSelector.svelte';
   import ActionButtons from '$lib/components/ActionButtons.svelte';
+  import SummaryTable from '$lib/components/SummaryTable.svelte';
+  import GroupTable from '$lib/components/GroupTable.svelte';
+  
   import { selectedGroups, selectedQuestions } from '$lib/stores/questionStore';
 
   let examTitle = '';
@@ -20,38 +23,78 @@
   let numberOfSets = 1;
   let numberOfVersions = 1;
 
+  let groups = [];
+  let groupCounter = 1;
+
   const examModes = ['Online', 'Offline', 'Hybrid'];
   const classOptions = Array.from({length: 12}, (_, i) => (i + 1).toString());
   const mediumOptions = ['Hindi', 'English', 'Tamil'];
   const subjectOptions = ['Science', 'Maths', 'Physics'];
 
   function handleReset() {
+
     selectedGroups.set([]);
     selectedQuestions.set([]);
+    groups = [];
+    groupCounter = 1;
   }
 
   function handleDelete() {
     selectedGroups.set([]);
     selectedQuestions.set([]);
+    groups = [];
+    groupCounter = 1;
   }
 
   function handleCreatePaper() {
     // Implement question paper creation logic
     console.log('Creating question paper...');
   }
+  function handleSubmit(event){
+    event.preventdefault() ; 
+  }
+  function handleCreateGroup(groupData) {
+    groups = [...groups, {
+      description: groupData.description,
+      availableQuestions: groupData.availableQuestions,
+      questionsToInsert: 0
+    }];
+    console.log('New group added:', groups); // Debug log
+  }
+  function handleGroupCreate(event) {
+    const { items, type, totalQuestions } = event.detail;
+    
+    const newGroup = {
+      id: groupCounter,
+      description: `Group ${groupCounter}`,
+      type: type,
+      items: items.map(item => ({...item})), // Create copy of items
+      availableQuestions: totalQuestions,
+      questionsToInsert: 10
+    };
+    
+    groups = [...groups, newGroup];
+    groupCounter++;
+  }
 </script>
 
-<div class="max-w-3xl mx-auto px-4 py-8 mb-20">
+<div class="max-w-3xl mx-auto px-4 py-8">
   <h1 class="text-2xl font-bold font-inter mb-8">Create exam event</h1>
 
-  <form>
+  <form on:submit|preventDefault={handleSubmit}>
     <Card title="Exam details">
-      <Input 
-        label="Exam title" 
-        placeholder="Enter exam title"
-        required={true}
-        bind:value={examTitle}
-      />
+
+   <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+    Exam title <span class = "text-red-600">*</span>
+    </label>
+    <input
+      type="text"
+      required
+      class="w-full px-3 py-2 border rounded-md"
+      bind:value={examTitle}
+    />
+  </div>
 
       <div class="mb-4">
         <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -68,6 +111,22 @@
       </div>
     </Card>
 
+     <Card title="Exam paper configuration">
+      <ExamConfig
+        bind:totalTime
+        bind:totalQuestions
+        bind:numberOfSets
+        bind:numberOfVersions
+      />
+    </Card>
+
+
+    
+
+    <Card title="Define Difficulty Level Distribution">
+      <DifficultyDistribution />
+    </Card>
+    
     <Card title="Class & Subject Selection">
       <div class="grid grid-cols-2 gap-4">
         <Dropdown 
@@ -109,25 +168,31 @@
       {/if} -->
     </Card>
 
-    <Card title="Define Difficulty Level Distribution">
-      <DifficultyDistribution />
-    </Card>
-
-    <Card title="Exam paper configuration">
-      <ExamConfig
-        bind:totalTime
-        bind:totalQuestions
-        bind:numberOfSets
-        bind:numberOfVersions
-      />
-    </Card>
-
-    <ChapterSelector />
+   
+    <ChapterSelector on:createGroup={handleGroupCreate} />
   </form>
-</div>
 
-<ActionButtons 
-  onReset={handleReset}
-  onDelete={handleDelete}
-  onCreatePaper={handleCreatePaper}
-/>
+  {#if groups.length > 0}
+    <div class="mt-8">
+      <GroupTable
+        {groups}
+        onUpdate={(index, field, value) => {
+          groups[index][field] = value;
+          groups = [...groups];
+        }}
+        onDelete={(index) => {
+          groups = groups.filter((_, i) => i !== index);
+        }}
+      />
+    </div>
+  {/if}
+
+  <div class="mt-8 mb-8">
+    <ActionButtons 
+      
+      onReset={handleReset}
+      onDelete={handleDelete}
+      onCreatePaper={handleCreatePaper}
+    />
+  </div>
+</div>

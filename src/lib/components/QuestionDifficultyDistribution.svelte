@@ -16,25 +16,44 @@
     chart = new Chart(chartCanvas, {
       type: 'bar',
       data: {
-        labels: ['Easy', 'Medium', 'Hard'],
-        datasets: [{
-          data: [easyPercentage, mediumPercentage, hardPercentage],
-          backgroundColor: ['#22c55e', '#f97316', '#ef4444']
-        }]
+        labels: ['Distribution'],
+        datasets: [
+          {
+            label: 'Easy',
+            data: [easyPercentage],
+            backgroundColor: '#22c55e',
+            barPercentage: 0.8
+          },
+          {
+            label: 'Medium',
+            data: [mediumPercentage],
+            backgroundColor: '#fbbf24',
+            barPercentage: 0.8
+          },
+          {
+            label: 'Hard',
+            data: [hardPercentage],
+            backgroundColor: '#ef4444',
+            barPercentage: 0.8
+          }
+        ]
       },
       options: {
+        indexAxis: 'y', // Makes the bar chart horizontal
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { 
+        plugins: {
           legend: { display: false },
         },
-        scales: { 
-          y: { 
-            beginAtZero: true, 
-            max: 100,
-            ticks: {
-              callback: value => `${value}%`
-            }
+        scales: {
+          x: {
+            stacked: true,
+            display: false, // Hides the x-axis
+            max: 100
+          },
+          y: {
+            stacked: true,
+            display: false // Hides the y-axis
           }
         }
       }
@@ -96,7 +115,7 @@
     {/if}
 
     <!-- Chart Preview -->
-    <div class="h-48">
+    <div class="h-12">
       <canvas bind:this={chartCanvas}></canvas>
     </div>
 
