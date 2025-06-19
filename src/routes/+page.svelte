@@ -137,6 +137,24 @@
     currentView = 'generate' ; 
   }
   
+  // Add handleSubmit function
+  function handleSubmit(event) {
+    event.preventDefault();
+    // Add any form submission logic here
+    // This function can validate all fields before moving to review
+    if (examDetailsValid && classSubjectValid && examConfigValid && difficultyValid) {
+      currentView = 'review';
+    } else {
+      const errors = [];
+      if (!examDetailsValid) errors.push('Exam details are incomplete');
+      if (!classSubjectValid) errors.push('Class and subject selection is required');
+      if (!examConfigValid) errors.push('Exam configuration is invalid');
+      if (!difficultyValid) errors.push('Difficulty distribution must total 100%');
+      
+      alert(errors.join('\n'));
+    }
+  }
+
 </script>
 
 <div class="max-w-3xl mx-auto px-4 py-8">
