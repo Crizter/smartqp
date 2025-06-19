@@ -2,29 +2,35 @@
   import Card from './Card.svelte';
   import { generateQuestionPaperId } from '$lib/utils/paperIdGenerator';
 
-  // Props from exam configuration
+  // Props with default values
   export let examTitle = '';
   export let examClass = '';
   export let examMedium = '';
   export let examSubject = '';
   export let numberOfSets = 1;
   export let numberOfVersions = 1;
-  export let questions = [];
+  export let questions = []; // Default empty array
 
-  // Generate papers based on sets and versions
-  $: papers = Array.from({ length: numberOfSets * numberOfVersions }, (_, index) => {
-    const setNumber = Math.floor(index / numberOfVersions) + 1;
-    const versionNumber = (index % numberOfVersions) + 1;
-    
-    return {
-      questionPaperId: generateQuestionPaperId(setNumber, versionNumber),
-      eventId: '100000011', // This would come from backend
-      eventName: examTitle,
-      subjectName: examSubject,
-      standard: examClass,
-      medium: examMedium,
-    };
-  });
+  // Generate papers reactively
+  $: papers = generatePapers();
+
+  function generatePapers() {
+    if (!numberOfSets || !numberOfVersions) return [];
+
+    return Array.from({ length: numberOfSets * numberOfVersions }, (_, index) => {
+      const setNumber = Math.floor(index / numberOfVersions) + 1;
+      const versionNumber = (index % numberOfVersions) + 1;
+      
+      return {
+        questionPaperId: generateQuestionPaperId(setNumber, versionNumber),
+        eventId: '100000011',
+        eventName: examTitle || 'Untitled Exam',
+        subjectName: examSubject || 'Not specified',
+        standard: examClass || 'Not specified',
+        medium: examMedium || 'Not specified',
+      };
+    });
+  }
 
   // Handle paper actions
   function handleDownload(paperId) {

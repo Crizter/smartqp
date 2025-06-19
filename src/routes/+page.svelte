@@ -13,6 +13,8 @@
   import ActionBar from '$lib/components/ActionBar.svelte';
   import ReviewPage from '$lib/components/ReviewPage.svelte';
   import Stepper from '$lib/components/Stepper.svelte';
+  import GeneratePapers from '$lib/components/GeneratePapers.svelte';
+
 
   // Exam details state
   let examTitle = '';
@@ -49,6 +51,8 @@
   let easy = 40;
   let medium = 40;
   let hard = 20;
+   
+
 
   // prop for the difficulty distribution 
   let isReviewPageEnabled = false;
@@ -117,6 +121,9 @@
       );
       return;
     }
+    if(difficultyValid) { 
+      currentView = 'review' ; 
+    }
     currentView = 'review';
   }
 
@@ -126,12 +133,16 @@
     numberOfSets = event.detail.numberOfSets;
     numberOfVersions = event.detail.numberOfVersions;
   }
+  function handleGeneratePapers() { 
+    currentView = 'generate' ; 
+  }
+  
 </script>
 
 <div class="max-w-3xl mx-auto px-4 py-8">
   <h1 class="text-2xl font-bold font-inter mb-8">Create exam event</h1>
 
-  <Stepper  {currentView} />
+  <Stepper {currentView} />
   
   {#if currentView === 'config'}
     <form on:submit|preventDefault={handleSubmit}>
@@ -198,7 +209,7 @@
         onCreatePaper={handleCreatePaper}
       />
     </div>
-  {:else}
+  {:else if currentView === 'review'}
     <ReviewPage 
       {examTitle}
       {examMode}
@@ -216,10 +227,17 @@
       isReviewPageEnabled={true}
       questions={allQuestions}
       on:back={() => currentView = 'config'}
-      on:generate={() => {
-        currentView = 'generate';
-        console.log('Generating papers...');
-      }}
+      on:generate={handleGeneratePapers}
+    />
+  {:else if currentView === 'generate'}
+    <GeneratePapers
+      {examTitle}
+      {examClass}
+      {examMedium}
+      {examSubject}
+      {numberOfSets}
+      {numberOfVersions}
+      questions={allQuestions}
     />
   {/if}
 </div>
