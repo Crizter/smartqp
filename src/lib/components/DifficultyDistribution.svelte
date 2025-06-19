@@ -1,14 +1,27 @@
 <script>
   import { onMount } from 'svelte';
   import Chart from 'chart.js/auto';
+  import Card from './Card.svelte';
 
-  export let easyPercentage = 40;
-  export let mediumPercentage = 40;
-  export let hardPercentage = 20;
+  // Add new props while keeping existing ones
+  export let easy = 40;
+  export let medium = 40;
+  export let hard = 20;
+  export let isValid = true;
+  export let isReviewPageEnabled = false;
+
+  // Rename existing percentage variables to match the chart functionality
+  $: easyPercentage = easy;
+  $: mediumPercentage = medium;
+  $: hardPercentage = hard;
 
   let chartCanvas;
   let chart;
-  let isValid = true;
+
+  let easyValid = true;
+  let mediumValid = true;
+  let totalValid = true;
+  let hardValid = true;
 
   $: {
     const total = easyPercentage + mediumPercentage + hardPercentage;
@@ -65,7 +78,6 @@
     return () => chart.destroy();
   });
 
-  // Update reactive statement for stacked bar
   $: if (chart) {
     chart.data.datasets[0].data = [easyPercentage];
     chart.data.datasets[1].data = [mediumPercentage];
@@ -85,7 +97,8 @@
         min="0"
         max="100"
         class="w-full px-3 py-2 border rounded-md"
-        bind:value={easyPercentage}
+        bind:value={easy}
+        disabled={isReviewPageEnabled}
       />
     </div>
     <div>
@@ -97,7 +110,8 @@
         min="0"
         max="100"
         class="w-full px-3 py-2 border rounded-md"
-        bind:value={mediumPercentage}
+        bind:value={medium}
+        disabled={isReviewPageEnabled}
       />
     </div>
     <div>
@@ -109,7 +123,8 @@
         min="0"
         max="100"
         class="w-full px-3 py-2 border rounded-md"
-        bind:value={hardPercentage}
+        bind:value={hard}
+        disabled={isReviewPageEnabled}
       />
     </div>
   </div>
@@ -120,7 +135,7 @@
   </div>
 
   <div>
-    <p class = "font-medium font-sans text-gray-700 ">Distribution preview </p>
+    <p class="font-medium font-sans text-gray-700">Distribution preview</p>
     <canvas bind:this={chartCanvas} class="max-h-12"></canvas>
   </div>
 </div>

@@ -2,6 +2,7 @@
   import Card from './Card.svelte';
   import DifficultyDistribution from './DifficultyDistribution.svelte';
   import QuestionPreview from './QuestionPreview.svelte';
+  
   // Props
   export let examTitle = '';
   export let examMode = '';
@@ -14,6 +15,25 @@
   export let numberOfVersions = 1;
   export let groups = [];
   export let questions = [];
+   export let easy = '';
+  export let medium = '';
+  export let hard = '';
+  export let isReviewPageEnabled = true;
+  
+  //  // Initialize examData with default values
+  //   let examData = {
+  //       easy: 0,
+  //       medium: 0,
+  //       hard: 0,
+  //       // Add other exam data properties as needed
+  //   };
+
+  
+  
+  import { createEventDispatcher } from 'svelte';
+  const dispatch = createEventDispatcher();
+
+  let difficultyValid = true;
 </script>
 
 <div class="space-y-8">
@@ -122,7 +142,13 @@
 
   <!-- Difficulty Distribution -->
   <Card title="Question Difficulty Distribution">
-    <DifficultyDistribution />
+    <DifficultyDistribution
+      bind:easy
+      bind:medium
+      bind:hard
+      bind:isValid={difficultyValid}
+      {isReviewPageEnabled}
+    />
   </Card>
 
   <!-- Groups Preview -->
@@ -167,10 +193,10 @@
     </div>
   </Card>
 
-  <!-- Questions Preview -->
+  <!-- Questions Preview
  <Card title="Available Questions">
   <QuestionPreview {questions} />
-</Card>
+</Card> -->
 
 
   <!-- Action Buttons -->

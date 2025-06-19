@@ -92,6 +92,7 @@
               'border-red-300 focus:ring-red-500 focus:border-red-500' : 
               'focus:ring-blue-500 focus:border-blue-500'}"
         />
+        
         <div class="hidden group-hover:block absolute -top-1 left-full ml-2 z-10">
           <div class="bg-gray-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
             Sets help create different question papers with same format
@@ -103,6 +104,7 @@
         {:else if numberOfSets < 1}
           <p class="mt-1 text-sm text-red-600">Minimum 1 set required</p>
         {/if}
+        
       </div>
     </div>
 

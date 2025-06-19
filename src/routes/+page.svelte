@@ -12,6 +12,7 @@
   import QuestionGroupsPreview from '$lib/components/QuestionGroupsPreview.svelte';
   import ActionBar from '$lib/components/ActionBar.svelte';
   import ReviewPage from '$lib/components/ReviewPage.svelte';
+  import Stepper from '$lib/components/Stepper.svelte';
 
   // Exam details state
   let examTitle = '';
@@ -19,11 +20,14 @@
   let examClass = '';
   let examMedium = '';
   let examSubject = '';
+
+
   
   // Initialize validation states
   let examDetailsValid = true;
   let classSubjectValid = true;
   let examConfigValid = true;
+  let difficultyValid = true;
   
   // Initialize validation errors object
   let validationErrors = {
@@ -42,6 +46,14 @@
   let groups = [];
   let allQuestions = [];
   let currentView = 'config';
+  let easy = 40;
+  let medium = 40;
+  let hard = 20;
+
+  // prop for the difficulty distribution 
+  let isReviewPageEnabled = false;
+  $: isReviewPageEnabled = currentView !== 'config';
+
 
   function handleGroupCreate(event) {
     const { type, items, totalQuestions } = event.detail;
@@ -119,6 +131,8 @@
 <div class="max-w-3xl mx-auto px-4 py-8">
   <h1 class="text-2xl font-bold font-inter mb-8">Create exam event</h1>
 
+  <Stepper  {currentView} />
+  
   {#if currentView === 'config'}
     <form on:submit|preventDefault={handleSubmit}>
       <ExamDetailsForm 
@@ -139,8 +153,24 @@
       </Card>
 
       <Card title="Define Difficulty Level Distribution">
-        <DifficultyDistribution />
+        <DifficultyDistribution
+          bind:easy
+          bind:medium
+          bind:hard
+          bind:isValid={difficultyValid}
+          isReviewPageEnabled={false}
+        />
       </Card>
+
+
+      <!-- <Card title="Define Difficulty Level Distribution">
+        <DifficultyDistribution 
+          bind :
+        />
+      </Card> -->
+
+
+
 
       <ClassSubjectSelector 
         bind:examClass
@@ -169,23 +199,27 @@
       />
     </div>
   {:else}
-   <ReviewPage 
-    {examTitle}
-    {examMode}
-    {examClass}
-    {examMedium}
-    {examSubject}
-    {totalTime}
-    {totalQuestions}
-    {numberOfSets}
-    {numberOfVersions}
-    {groups}
-    questions={allQuestions}
-    on:back={() => currentView = 'config'}
-    on:generate={() => {
-      console.log('Generating papers...');
-      // Add generation logic
-    }}
+    <ReviewPage 
+      {examTitle}
+      {examMode}
+      {examClass}
+      {examMedium}
+      {examSubject}
+      {totalTime}
+      {totalQuestions}
+      {numberOfSets}
+      {numberOfVersions}
+      {groups}
+      {easy}
+      {medium}
+      {hard}
+      isReviewPageEnabled={true}
+      questions={allQuestions}
+      on:back={() => currentView = 'config'}
+      on:generate={() => {
+        currentView = 'generate';
+        console.log('Generating papers...');
+      }}
     />
   {/if}
 </div>
