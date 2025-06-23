@@ -42,6 +42,10 @@
 		"svelte"
 	],
 	"dependencies": {
+		"@emotion/react": "^11.14.0",
+		"@emotion/styled": "^11.14.0",
+		"@mui/icons-material": "^7.1.2",
+		"@mui/material": "^7.1.2",
 		"@tailwindcss/vite": "^4.1.10",
 		"chart.js": "^4.4.9",
 		"tailwindcss": "^4.1.10"
