@@ -121,7 +121,7 @@
             <div class="pl-16">
               <h3 class="text-xl font-bold text-gray-900 mb-4">Generate question paper</h3>
               <p class="text-gray-500">
-                Generate the question paper of your preferred settings with a single click.
+                Generate the question paper of your preferred settings.
               </p>
             </div>
           </div>
