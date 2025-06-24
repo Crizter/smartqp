@@ -5,25 +5,25 @@
     { 
       id: 'config', 
       label: 'Create Paper',
-      icon: '📝',
+      icon: '1',
       description: 'Set up exam parameters'
     },
     { 
       id: 'review', 
       label: 'Review',
-      icon: '👀',
+      icon: '2',
       description: 'Review configuration'
     },
     { 
       id: 'generate', 
       label: 'Generate Paper',
-      icon: '⚡',
+      icon: '3',
       description: 'Create exam papers'
     },
     { 
       id: 'view', 
       label: 'View Paper',
-      icon: '📋',
+      icon: '4',
       description: 'Preview generated papers'
     }
   ];

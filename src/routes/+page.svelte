@@ -219,14 +219,40 @@
         on:updateQuestions={(e) => allQuestions = e.detail}
       />
     {/if}
-
+<!-- 
     <div class="mt-8 mb-8">
       <ActionButtons 
         onReset={handleReset}
         onDelete={handleDelete}
         onCreatePaper={handleCreatePaper}
       />
+    </div> -->
+    <!-- Action Buttons -->
+  <div class="flex items-center justify-end pt-6 border-t">
+    
+    <div class="flex  space-x-4">
+      <button 
+        class="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-gray-300 rounded-md hover:bg-gray-50"
+        on:click={handleDelete}
+      >
+        Delete
+      </button>
+      
+      <button 
+        class="px-4 py-2 text-sm font-medium text-black border border-gray-300  bg-white rounded-md hover:bg-blue-700"
+        on:click={handleDelete}
+      >
+        Reset
+      </button>
+      <button 
+        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+        on:click={handleCreatePaper}
+      >
+        Create question paper
+      </button>
     </div>
+  </div>
+  
   {:else if currentView === 'review'}
     <ReviewPage 
       {examTitle}

@@ -13,7 +13,7 @@
 
 <Card title="Exam details">
   <div>
-    <label class="block text-sm font-medium text-gray-700 mb-1">
+    <label class="block  text-sm font-medium text-gray-700  py-2">
       Exam title <span class="text-red-600">*</span>
     </label>
     <input
@@ -29,14 +29,14 @@
     {/if}
   </div>
 
-  <div class="mb-4">
-    <label class="block text-sm font-medium text-gray-700 mb-1">
+  <div class="mb-4 py-2">
+    <label class="block py-2 text-sm font-medium text-gray-700 mb-1">
       Exam mode
     </label>
     <RadioGroup options={examModes} bind:selected={examMode} />
   </div>
 
-  <div class="mb-4">
+  <div class="mb-4 ">
     <label class="block text-sm font-medium text-gray-700 mb-1">
       Exam type : <span class="text-gray-500"> MCQ </span>
     </label>
