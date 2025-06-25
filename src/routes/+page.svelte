@@ -16,7 +16,7 @@
             route:'/edit'  ,
         }, 
         {
-            title : 'Search Question Papers' , 
+            title : 'View Question Papers' , 
             description: 'Quickly find and access all your created question papers ' , 
             icon: '🔍',
             route: '/search',
