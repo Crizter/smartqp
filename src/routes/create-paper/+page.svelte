@@ -14,7 +14,12 @@
   import ReviewPage from '$lib/components/ReviewPage.svelte';
   import Stepper from '$lib/components/Stepper.svelte';
   import GeneratePapers from '$lib/components/GeneratePapers.svelte';
+  import { addPaper, updatePaperEditability } from '$lib/stores/paperStore';
+  import { v4 as uuidv4 } from 'uuid';
 
+  // Generate paperId when component mounts
+  let paperId = uuidv4();
+  console.log('Generated paperId:', paperId);
 
   // Exam details state
   let examTitle = '';
@@ -52,8 +57,6 @@
   let medium = 40;
   let hard = 20;
    
-
-
   // prop for the difficulty distribution 
   let isReviewPageEnabled = false;
   $: isReviewPageEnabled = currentView !== 'config';
@@ -109,22 +112,49 @@
 
   function handleCreatePaper(event) {
     event.preventDefault();
-    if (!examDetailsValid || !classSubjectValid || !examConfigValid) {
-      const errors = [];
-      if (validationErrors.questions) errors.push(validationErrors.questions);
-      if (validationErrors.versions) errors.push(validationErrors.versions);
-      if (validationErrors.sets) errors.push(validationErrors.sets);
-      
-      alert(errors.length > 0 
-        ? `Please fix the following errors:\n${errors.join('\n')}`
-        : 'Please fix all validation errors before proceeding'
-      );
-      return;
+    console.log('Creating paper with form data:', {
+      examTitle,
+      examSubject,
+      examClass,
+      examMedium,
+      examMode,
+      totalTime,
+      totalQuestions,
+      numberOfSets,
+      numberOfVersions,
+      groups,
+      difficultyDistribution: { easy, medium, hard }
+    });
+
+    const newPaper = {
+      questionPaperId: paperId,
+      eventName: examTitle,
+      subjectName: examSubject,
+      standard: examClass,
+      medium: examMedium,
+      createdAt: new Date().toISOString(),
+      status: 'Draft',
+      isEditable: true,
+      examMode,
+      totalTime,
+      totalQuestions,
+      numberOfSets,
+      numberOfVersions,
+      groups,
+      difficultyDistribution: {
+        easy,
+        medium,
+        hard
+      }
+    };
+
+    console.log('Adding new paper:', newPaper);
+    addPaper(newPaper);
+
+    if(difficultyValid) {
+      console.log('Moving to review view');
+      currentView = 'review';
     }
-    if(difficultyValid) { 
-      currentView = 'review' ; 
-    }
-    currentView = 'review';
   }
 
   function handleExamConfigUpdate(event) {
@@ -133,7 +163,9 @@
     numberOfSets = event.detail.numberOfSets;
     numberOfVersions = event.detail.numberOfVersions;
   }
-  function handleGeneratePapers() { 
+  function handleGeneratePapers() {
+    console.log('Generating papers for ID:', paperId);
+    updatePaperEditability(paperId, false);
     currentView = 'generate' ; 
   }
   
