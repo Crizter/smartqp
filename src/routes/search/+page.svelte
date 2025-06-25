@@ -1,99 +1,109 @@
 <script>
   import Card from '$lib/components/Card.svelte';
+  import { goto } from '$app/navigation';
   
- let papers = [
-  {
-    questionPaperId: 'QP001',
-    eventName: 'Mid Term Exam',
-    subjectName: 'Mathematics',
-    standard: '10th',
-    medium: 'English',
-    createdAt: '2023-06-23',
-    status: 'Draft'
-  },
-  {
-    questionPaperId: 'QP002',
-    eventName: 'Final Exam',
-    subjectName: 'Science',
-    standard: '9th',
-    medium: 'English',
-    createdAt: '2023-11-10',
-    status: 'Published'
-  },
-  {
-    questionPaperId: 'QP003',
-    eventName: 'Unit Test 1',
-    subjectName: 'English Literature',
-    standard: '8th',
-    medium: 'Hindi',
-    createdAt: '2023-07-05',
-    status: 'Draft'
-  },
-  {
-    questionPaperId: 'QP004',
-    eventName: 'Pre-board Exam',
-    subjectName: 'Social Science',
-    standard: '10th',
-    medium: 'English',
-    createdAt: '2023-12-01',
-    status: 'Archived'
-  },
-  {
-    questionPaperId: 'QP005',
-    eventName: 'Unit Test 2',
-    subjectName: 'Physics',
-    standard: '12th',
-    medium: 'English',
-    createdAt: '2023-08-15',
-    status: 'Published'
-  },
-  {
-    questionPaperId: 'QP006',
-    eventName: 'Quarterly Exam',
-    subjectName: 'Chemistry',
-    standard: '11th',
-    medium: 'Hindi',
-    createdAt: '2023-09-20',
-    status: 'Draft'
-  },
-  {
-    questionPaperId: 'QP007',
-    eventName: 'Monthly Test',
-    subjectName: 'Biology',
-    standard: '9th',
-    medium: 'English',
-    createdAt: '2023-10-05',
-    status: 'Published'
-  },
-  {
-    questionPaperId: 'QP008',
-    eventName: 'Annual Exam',
-    subjectName: 'Computer Science',
-    standard: '12th',
-    medium: 'English',
-    createdAt: '2023-12-15',
-    status: 'Published'
-  },
-  {
-    questionPaperId: 'QP009',
-    eventName: 'Class Test',
-    subjectName: 'History',
-    standard: '8th',
-    medium: 'Hindi',
-    createdAt: '2023-06-30',
-    status: 'Draft'
-  },
-  {
-    questionPaperId: 'QP010',
-    eventName: 'Weekly Quiz',
-    subjectName: 'Geography',
-    standard: '7th',
-    medium: 'English',
-    createdAt: '2023-05-12',
-    status: 'Archived'
-  }
-];
-
+  let papers = [
+    {
+      questionPaperId: 'QP001',
+      eventName: 'Mid Term Exam',
+      subjectName: 'Mathematics',
+      standard: '10th',
+      medium: 'English',
+      createdAt: '2023-06-23',
+      status: 'Draft',
+      isEditable: true // Paper still in review phase
+    },
+    {
+      questionPaperId: 'QP002',
+      eventName: 'Final Exam',
+      subjectName: 'Science',
+      standard: '9th',
+      medium: 'English',
+      createdAt: '2023-11-10',
+      status: 'Published',
+      isEditable: false // Paper already generated
+    },
+    {
+      questionPaperId: 'QP003',
+      eventName: 'Unit Test 1',
+      subjectName: 'English Literature',
+      standard: '8th',
+      medium: 'Hindi',
+      createdAt: '2023-07-05',
+      status: 'Draft',
+      isEditable: true // Paper still in review phase
+    },
+    {
+      questionPaperId: 'QP004',
+      eventName: 'Pre-board Exam',
+      subjectName: 'Social Science',
+      standard: '10th',
+      medium: 'English',
+      createdAt: '2023-12-01',
+      status: 'Archived',
+      isEditable: false // Paper already generated
+    },
+    {
+      questionPaperId: 'QP005',
+      eventName: 'Unit Test 2',
+      subjectName: 'Physics',
+      standard: '12th',
+      medium: 'English',
+      createdAt: '2023-08-15',
+      status: 'Published',
+      isEditable: false // Paper already generated
+    },
+    {
+      questionPaperId: 'QP006',
+      eventName: 'Quarterly Exam',
+      subjectName: 'Chemistry',
+      standard: '11th',
+      medium: 'Hindi',
+      createdAt: '2023-09-20',
+      status: 'Draft',
+      isEditable: true // Paper still in review phase
+    },
+    {
+      questionPaperId: 'QP007',
+      eventName: 'Monthly Test',
+      subjectName: 'Biology',
+      standard: '9th',
+      medium: 'English',
+      createdAt: '2023-10-05',
+      status: 'Published',
+      isEditable: false // Paper already generated
+    },
+    {
+      questionPaperId: 'QP008',
+      eventName: 'Annual Exam',
+      subjectName: 'Computer Science',
+      standard: '12th',
+      medium: 'English',
+      createdAt: '2023-12-15',
+      status: 'Published',
+      isEditable: false // Paper already generated
+    },
+    {
+      questionPaperId: 'QP009',
+      eventName: 'Class Test',
+      subjectName: 'History',
+      standard: '8th',
+      medium: 'Hindi',
+      createdAt: '2023-06-30',
+      status: 'Draft',
+      isEditable: true // Paper still in review phase
+    },
+    {
+      questionPaperId: 'QP010',
+      eventName: 'Weekly Quiz',
+      subjectName: 'Geography',
+      standard: '7th',
+      medium: 'English',
+      createdAt: '2023-05-12',
+      status: 'Archived',
+      isEditable: false // Paper already generated
+    }
+  ];
 
   // Search and sort state
   let searchQuery = '';
@@ -142,6 +152,14 @@
         return 'bg-gray-100 text-gray-800';
     }
   }
+
+  // Add edit handling function
+  function handleEdit(paperId) {
+    const paper = papers.find(p => p.questionPaperId === paperId);
+    if (paper && paper.isEditable) {
+      goto(`/edit/${paperId}`);
+    }
+  }
 </script>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -171,16 +189,19 @@
                 { key: 'standard', label: 'Class' },
                 { key: 'medium', label: 'Medium' },
                 { key: 'createdAt', label: 'Created At' },
-                { key: 'status', label: 'Status' }
+                { key: 'status', label: 'Status' },
+                { key: 'actions', label: 'Actions' }
               ] as header}
                 <th 
                   scope="col" 
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                  on:click={() => toggleSort(header.key)}
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider {header.key !== 'actions' ? 'cursor-pointer hover:bg-gray-100' : ''}"
+                  on:click={() => header.key !== 'actions' && toggleSort(header.key)}
                 >
                   <div class="flex items-center space-x-1">
                     <span>{header.label}</span>
-                    <span class="text-gray-400">{getSortIcon(header.key)}</span>
+                    {#if header.key !== 'actions'}
+                      <span class="text-gray-400">{getSortIcon(header.key)}</span>
+                    {/if}
                   </div>
                 </th>
               {/each}
@@ -200,11 +221,23 @@
                     {paper.status}
                   </span>
                 </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  {#if paper.isEditable}
+                    <button
+                      on:click={() => handleEdit(paper.questionPaperId)}
+                      class="text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      Edit
+                    </button>
+                  {:else}
+                    <span class="text-gray-400 text-sm">Not Editable</span>
+                  {/if}
+                </td>
               </tr>
             {/each}
             {#if filteredPapers.length === 0}
               <tr>
-                <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                <td colspan="8" class="px-6 py-4 text-center text-gray-500">
                   No papers found matching your search criteria
                 </td>
               </tr>

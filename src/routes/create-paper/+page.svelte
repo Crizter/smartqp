@@ -232,7 +232,7 @@
     
     <div class="flex  space-x-4">
       <button 
-        class="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-gray-300 rounded-md hover:bg-gray-50"
+        class="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-gray-300 rounded-md hover:bg-red-400"
         on:click={handleDelete}
       >
         Delete

@@ -9,6 +9,7 @@
   export let hard = 20;
   export let isValid = true;
   export let isReviewPageEnabled = false;
+  export let disabled = false; // Add this line
 
   // Rename existing percentage variables to match the chart functionality
   $: easyPercentage = easy;
@@ -92,40 +93,63 @@
       <label class="block text-sm font-medium text-gray-700 mb-1">
         Easy %*
       </label>
-      <input
-        type="number"
-        min="0"
-        max="100"
-        class="w-full px-3 py-2 border rounded-md"
-        bind:value={easy}
-        disabled={isReviewPageEnabled}
-      />
+      {#if isReviewPageEnabled}
+        <div class="flex items-center justify-between w-full px-4 py-2.5 bg-green-50 border border-green-100 rounded-lg">
+          <span class="text-sm font-medium text-gray-900">{easy}%</span>
+          <span class="h-2 w-2 rounded-full bg-green-400"></span>
+        </div>
+      {:else}
+        <input 
+          type="number"
+          min="0"
+          max="100"
+          bind:value={easy}
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 {disabled ? 'bg-gray-50 cursor-not-allowed' : ''}"
+          {disabled}
+        />
+      {/if}
     </div>
+
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-1">
         Medium %*
       </label>
-      <input
-        type="number"
-        min="0"
-        max="100"
-        class="w-full px-3 py-2 border rounded-md"
-        bind:value={medium}
-        disabled={isReviewPageEnabled}
-      />
+      {#if isReviewPageEnabled}
+        <div class="flex items-center justify-between w-full px-4 py-2.5 bg-yellow-50 border border-yellow-100 rounded-lg">
+          <span class="text-sm font-medium text-gray-900">{medium}%</span>
+          <span class="h-2 w-2 rounded-full bg-yellow-400"></span>
+        </div>
+      {:else}
+        <input 
+          type="number"
+          min="0"
+          max="100"
+          bind:value={medium}
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 {disabled ? 'bg-gray-50 cursor-not-allowed' : ''}"
+          {disabled}
+        />
+      {/if}
     </div>
+
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-1">
         Hard %*
       </label>
-      <input
-        type="number"
-        min="0"
-        max="100"
-        class="w-full px-3 py-2 border rounded-md"
-        bind:value={hard}
-        disabled={isReviewPageEnabled}
-      />
+      {#if isReviewPageEnabled}
+        <div class="flex items-center justify-between w-full px-4 py-2.5 bg-red-50 border border-red-100 rounded-lg">
+          <span class="text-sm font-medium text-gray-900">{hard}%</span>
+          <span class="h-2 w-2 rounded-full bg-red-400"></span>
+        </div>
+      {:else}
+        <input 
+          type="number"
+          min="0"
+          max="100"
+          bind:value={hard}
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 {disabled ? 'bg-gray-50 cursor-not-allowed' : ''}"
+          {disabled}
+        />
+      {/if}
     </div>
   </div>
 
