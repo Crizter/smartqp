@@ -9,19 +9,35 @@
   let searchQuery = '';
   let sortOrder = 'desc'; // 'asc' or 'desc'
 
+  // Add sorting state
+  let sortField = 'name';
+  let sortDirection = 'asc';
+
   // Filter and sort items
-  $: filteredItems = items
-    .filter(item => 
+  $: filteredItems = (() => {
+    // First filter the items
+    const filtered = items.filter(item => 
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (item.parentChapter && item.parentChapter.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (item.parentTopic && item.parentTopic.toLowerCase().includes(searchQuery.toLowerCase()))
-    )
-    .sort((a, b) => {
-      if (sortOrder === 'desc') {
-        return b.questionCount - a.questionCount;
+    );
+
+    // Then sort the filtered items
+    return filtered.sort((a, b) => {
+      const modifier = sortDirection === 'asc' ? 1 : -1;
+      
+      switch (sortField) {
+        case 'questionCount':
+          return (a.questionCount - b.questionCount) * modifier;
+        case 'parentChapter':
+          return (a.parentChapter || '').localeCompare(b.parentChapter || '') * modifier;
+        case 'parentTopic':
+          return (a.parentTopic || '').localeCompare(b.parentTopic || '') * modifier;
+        default:
+          return a.name.localeCompare(b.name) * modifier;
       }
-      return a.questionCount - b.questionCount;
     });
+  })();
 
   // Calculate pagination
   $: totalPages = Math.ceil(filteredItems.length / itemsPerPage);
@@ -47,9 +63,21 @@
     }
   }
 
-  function handleSort(event) {
-    event.preventDefault();
-    sortOrder = sortOrder === 'desc' ? 'asc' : 'desc';
+  function handleSort(field) {
+    if (sortField === field) {
+      // If clicking same field, toggle direction
+      sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      // If clicking new field, set it as sort field and default to ascending
+      sortField = field;
+      sortDirection = 'asc';
+    }
+  }
+
+  // Helper function to show sort indicators
+  function getSortIndicator(field) {
+    if (sortField !== field) return '↕️';
+    return sortDirection === 'asc' ? '↑' : '↓';
   }
 
   function handleSearch(event) {
@@ -77,7 +105,7 @@
     </div>
 
     <!-- Sort button with click handler -->
-    <button
+    <!-- <button
       on:click={handleSort}
       class="flex items-center px-4 py-2 border rounded-lg hover:bg-gray-50"
     >
@@ -91,20 +119,45 @@
           <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
         </svg>
       {/if}
-    </button>
+    </button> -->
+    
   </div>
 
   <div class="overflow-x-auto">
     <table class="min-w-full divide-y divide-gray-200">
       <thead>
         <tr class="bg-gray-50">
-          <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">Name</th>
+          <th 
+            class="px-4 py-3 text-left text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-100"
+            on:click={() => handleSort('name')}
+          >
+            <div class="flex items-center space-x-1">
+              <span>Name</span>
+              <span class="text-gray-400">{getSortIndicator('name')}</span>
+            </div>
+          </th>
           {#if selectionType !== 'chapter'}
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">
-              {selectionType === 'topic' ? 'Chapter' : 'Topic'}
+            <th 
+              class="px-4 py-3 text-left text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-100"
+              on:click={() => handleSort(selectionType === 'topic' ? 'parentChapter' : 'parentTopic')}
+            >
+              <div class="flex items-center space-x-1">
+                <span>{selectionType === 'topic' ? 'Chapter' : 'Topic'}</span>
+                <span class="text-gray-400">
+                  {getSortIndicator(selectionType === 'topic' ? 'parentChapter' : 'parentTopic')}
+                </span>
+              </div>
             </th>
           {/if}
-          <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">Questions</th>
+          <th 
+            class="px-4 py-3 text-left text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-100"
+            on:click={() => handleSort('questionCount')}
+          >
+            <div class="flex items-center space-x-1">
+              <span>Questions</span>
+              <span class="text-gray-400">{getSortIndicator('questionCount')}</span>
+            </div>
+          </th>
           <th class="w-24 px-4 py-3 text-sm font-medium text-left text-gray-700">Actions</th>
         </tr>
       </thead>

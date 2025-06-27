@@ -22,4 +22,4 @@ export function updatePaperEditability(paperId, isEditable) {
     console.log('Papers after editability update:', updatedPapers);
     return updatedPapers;
   });
-}
+} 

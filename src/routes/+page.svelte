@@ -9,12 +9,12 @@
             icon: '📝',
             route: '/create-paper' ,
         }, 
-        {
-            title : 'Edit Question paper', 
-            description:  'Review, modify and manage your existing paper with our editor', 
-            icon: '✏️',
-            route:'/edit'  ,
-        }, 
+        // {
+        //     title : 'Edit Question paper', 
+        //     description:  'Review, modify and manage your existing paper with our editor', 
+        //     icon: '✏️',
+        //     route:'/edit'  ,
+        // }, 
         {
             title : 'View Question Papers' , 
             description: 'Quickly find and access all your created question papers ' , 
@@ -47,7 +47,7 @@
 
   <!-- Features Grid -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
       {#each features as feature}
         <button
           on:click={() => navigateTo(feature.route)}
